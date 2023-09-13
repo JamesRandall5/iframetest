@@ -6,6 +6,7 @@
 
     <script type="text/javascript">
         var blockSize = 100;
+        var spacing = 10; // Adjust the spacing value as needed
         var board = document.getElementById("board");
         var maze = [
             [0, 0, 0, 0],
@@ -45,8 +46,8 @@
 
         board.style.backgroundColor = "black";
         board.style.border = "1px solid white";
-        board.style.height = (rows * blockSize) + "px"
-        board.style.width = (cols * blockSize) + "px"
+        board.style.height = ((rows * blockSize) + (rows - 1) * spacing) + "px"; // Adjust height
+        board.style.width = ((cols * blockSize) + (cols - 1) * spacing) + "px"; // Adjust width
 
         function drawMaze() {
             var elements = document.getElementsByClassName("wall");
@@ -65,13 +66,13 @@
                         wall.style.width = blockSize + "px";
                         wall.style.backgroundColor = col === 1 ? "red" : "green";
                         wall.style.position = "absolute";
-                        wall.style.left = colN * blockSize + "px";
-                        wall.style.top = rowN * blockSize + "px";
+                        wall.style.left = (colN * blockSize + colN * spacing) + "px"; // Adjust left position
+                        wall.style.top = (rowN * blockSize + rowN * spacing) + "px"; // Adjust top position
                         walls.push(wall);
                         board.appendChild(wall);
                     } else if (col === 2) {
-                        player.style.left = colN * blockSize + "px";
-                        player.style.top = rowN * blockSize + "px";
+                        player.style.left = (colN * blockSize + colN * spacing) + "px"; // Adjust left position
+                        player.style.top = (rowN * blockSize + rowN * spacing) + "px"; // Adjust top position
                     }
                 }
             }
@@ -111,8 +112,8 @@
                     break;
             }
 
-            player.style.left = (playerPos.x * blockSize) + "px";
-            player.style.top = (playerPos.y * blockSize) + "px";
+            player.style.left = ((playerPos.x * blockSize) + (playerPos.x * spacing)) + "px"; // Adjust left position
+            player.style.top = ((playerPos.y * blockSize) + (playerPos.y * spacing)) + "px"; // Adjust top position
         }
 
         // Function to handle double-click events on open squares
