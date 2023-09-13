@@ -5,14 +5,9 @@
     <div id="board" style="position: absolute;"></div>
 
     <style>
-        /* Style for the walls */
-        .wall {
+        /* Style for the walls and spacing */
+        .wall, .spacing {
             background-color: yellow;
-        }
-        
-        /* Style for the spacing */
-        .spacing {
-            background-color: white;
         }
     </style>
 
@@ -56,8 +51,6 @@
 
         var captureBack = true;
 
-        // Set the background color for the board to white
-        //board.style.backgroundColor = "white";
         board.style.border = "1px solid white";
         board.style.height = ((rows * blockSize) + ((rows - 1) * spacing)) + "px"; // Adjust height
         board.style.width = ((cols * blockSize) + ((cols - 1) * spacing)) + "px"; // Adjust width
@@ -138,8 +131,8 @@
                     break;
             }
 
-            player.style.left = ((playerPos.x * blockSize) + (playerPos.x * spacing)) + "px"; // Adjust left position
-            player.style.top = ((playerPos.y * blockSize) + (playerPos.y * spacing)) + "px"; // Adjust top position
+            player.style.left = (playerPos.x * blockSize) + "px";
+            player.style.top = (playerPos.y * blockSize) + "px";
         }
 
         // Function to handle double-click events on open squares
