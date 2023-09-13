@@ -4,18 +4,6 @@
 <body>
     <div id="board" style="position: absolute;"></div>
 
-    <style>
-        /* Style for the walls and spacing */
-        .wall {
-            background-color: yellow;
-            position: absolute;
-        }
-        .spacing {
-            background-color: white;
-            position: absolute;
-        }
-    </style>
-
     <script type="text/javascript">
         var blockSize = 100;
         var spacing = 10; // Adjust the spacing value as needed
@@ -61,26 +49,20 @@
         board.style.width = ((cols * blockSize) + ((cols - 1) * spacing)) + "px"; // Adjust width
 
         function drawMaze() {
-            var elements = document.getElementsByClassName("wall");
-            while (elements.length > 0) {
-                elements[0].parentNode.removeChild(elements[0]);
-            }
             for (var rowN in maze) {
                 var row = maze[rowN]
 
                 for (var colN in row) {
                     var col = row[colN];
-                    if (col === 1 || col === -1) {
-                        var wall = document.createElement("div");
-                        wall.classList.add("wall");
-                        wall.style.height = blockSize + "px";
-                        wall.style.width = blockSize + "px";
-                        wall.style.backgroundColor = col === 1 ? "red" : "green";
-                        wall.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
-                        wall.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
-                        walls.push(wall);
-                        board.appendChild(wall);
-                    } else if (col === 2) {
+                    var square = document.createElement("div");
+                    square.style.height = blockSize + "px";
+                    square.style.width = blockSize + "px";
+                    square.style.backgroundColor = col === 1 ? "red" : "yellow";
+                    square.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
+                    square.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
+                    square.style.position = "absolute";
+                    board.appendChild(square);
+                    if (col === 2) {
                         player.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
                         player.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
                     }
