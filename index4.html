@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+    <div id="board" style="position: absolute;"></div>
+
+    <script type="text/javascript">
+        var blockSize = 100;
+        var board = document.getElementById("board");
+        var maze = [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ];
+
+        // URLs and custom text for open squares (corresponding to maze elements with value 0)
+        var squareInfo = [
+            ["url1.html", "Square 1"],
+            ["url2.html", "Square 2"],
+            ["url3.html", "Square 3"],
+            ["url4.html", "Square 4"]
+        ];
+
+        var rows = maze.length;
+        var cols = maze[0].length;
+        var walls = [];
+        var player = document.createElement("div");
+        player.style.height = blockSize + "px";
+        player.style.width = blockSize + "px";
+        player.style.backgroundColor = "blue";
+        player.style.position = "absolute";
+        player.style.zIndex = 100;
+        board.appendChild(player);
+        var playerPos = { x: 0, y: 0 };
+
+        var captureBack = true;
+
+        board.style.backgroundColor = "black";
+        board.style.border = "1px solid white";
+        board.style.height = (rows * blockSize) + "px"
+        board.style.width = (cols * blockSize) + "px"
+
+        function drawMaze() {
+            var elements = document.getElementsByClassName("wall");
+            while (elements.length > 0) {
+                elements[0].parentNode.removeChild(elements[0]);
+            }
+            for (var rowN in maze) {
+                var row = maze[rowN]
+
+                for (var colN in row) {
+                    var col = row[colN];
+                    if (col === 1 || col === -1) {
+                        var wall = document.createElement("div");
+                        wall.classList.add("wall");
+                        wall.style.height = blockSize + "px";
+                        wall.style.width = blockSize + "px";
+                        wall.style.backgroundColor = col === 1 ? "red" : "green";
+                        wall.style.position = "absolute";
+                        wall.style.left = colN * blockSize + "px";
+                        wall.style.top = rowN * blockSize + "px";
+                        walls.push(wall);
+                        board.appendChild(wall);
+                    } else if (col === 2) {
+                        player.style.left = colN * blockSize + "px";
+                        player.style.top = rowN * blockSize + "px";
+                    } else if (col === 0) {
+                        var squareIndex = colN + rowN * cols;
+                        if (squareIndex < squareInfo.length) {
+                            // Create a square with custom text
+                            var square = document.createElement("div");
+                            square.style.height = blockSize + "px";
+                            square.style.width = blockSize + "px";
+                            square.style.backgroundColor = "yellow";
+                            square.style.position = "absolute";
+                            square.style.left = colN * blockSize + "px";
+                            square.style.top = rowN * blockSize + "px";
+                            square.innerHTML = squareInfo[squareIndex][1]; // Custom text
+                            square.style.textAlign = "center";
+                            square.style.lineHeight = blockSize + "px";
+                            square.style.zIndex = 1; // Behind the player
+                            board.appendChild(square);
+                        }
+                    }
+                }
+            }
+        }
+
+        drawMaze();
+
+        function move(dir) {
+            switch (dir) {
+                case "right":
+                    if (playerPos.x < cols - 1 && maze[playerPos.y][playerPos.x + 1] !== 1) {
+                        playerPos.x++;
+                    } else {
+                        return;
+                    }
+                    break;
+                case "left":
+                    if (playerPos.x > 0 && maze[playerPos.y][playerPos.x - 1] !== 1) {
+                        playerPos.x--;
+                    } else {
+                        return;
+                    }
+                    break;
+                case "up":
+                    if (playerPos.y > 0 && maze[playerPos.y - 1][playerPos.x] !== 1) {
+                        playerPos.y--;
+                    } else {
+                        return;
+                    }
+                    break;
+                case "down":
+                    if (playerPos.y < rows - 1 && maze[playerPos.y + 1][playerPos.x] !== 1) {
+                        playerPos.y++;
+                    } else {
+                        return;
+                    }
+                    break;
+            }
+
+            player.style.left = (playerPos.x * blockSize) + "px";
+            player.style.top = (playerPos.y * blockSize) + "px";
+        }
+
+        // Function to handle double-click events on open squares
+        function handleDoubleClick(event) {
+            var currentSquareValue = maze[playerPos.y][playerPos.x];
+            if (currentSquareValue === 0) {
+                var squareIndex = playerPos.x + playerPos.y * cols;
+                if (squareIndex < squareInfo.length) {
+                    window.location.href = squareInfo[squareIndex][0]; // Redirect to URL
+                }
+            }
+        }
+
+        // Add a double-click event listener to the board
+        board.addEventListener("dblclick", handleDoubleClick);
+
+        window.addEventListener("keydown", function(event) {
+            switch (event.keyCode) {
+                case 38:
+                    move("up");
+                    break;
+                case 40:
+                    move("down");
+                    break;
+                case 37:
+                    move("left");
+                    break;
+                case 39:
+                    move("right");
+                    break;
+                case 13: // Enter key
+                    handleDoubleClick(); // Call the same function as for double-click
+                    break;
+            }
+        });
+
+        window.addEventListener('message', function (event) {
+            console.log('message received:  ' + event.data);
+            try {
+                var msg = JSON.parse(event.data);
+                if (msg.type === 'dashboard-iframe-msg' && msg.source === 'dashboard-app') {
+                    switch (msg.data.key) {
+                        case "down":
+                        case "up":
+                        case "left":
+                        case "right":
+                            move(msg.data.key);
+                            break;
+                        case "back": {
+                            if (!captureBack) {
+                                return;
+                            }
+                            console.log('consuming back');
+                            parent.postMessage(JSON.stringify({
+                                type: "dashboard-iframe-msg", source: "myapp",
+                                data: {
+                                    type: "keypress-consumed",
+                                    seq: msg.data.seq,
+                                }
+                            }), '*');
+                        }
+                            break;
+                    }
+                }
+            } catch (e) { }
+        }, false);
+    </script>
+</body>
+</html>
