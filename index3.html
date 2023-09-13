@@ -4,6 +4,18 @@
 <body>
     <div id="board" style="position: absolute;"></div>
 
+    <style>
+        /* Add a common style for the spacing */
+        .spacing {
+            background-color: white;
+        }
+
+        /* Style for the walls */
+        .wall {
+            background-color: yellow;
+        }
+    </style>
+
     <script type="text/javascript">
         var blockSize = 100;
         var spacing = 10; // Adjust the spacing value as needed
@@ -64,7 +76,6 @@
                         wall.classList.add("wall");
                         wall.style.height = blockSize + "px";
                         wall.style.width = blockSize + "px";
-                        wall.style.backgroundColor = col === 1 ? "red" : "green";
                         wall.style.position = "absolute";
                         wall.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
                         wall.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
@@ -74,6 +85,20 @@
                         player.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
                         player.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
                     }
+                }
+            }
+
+            // Add the spacing elements
+            for (var i = 0; i < rows - 1; i++) {
+                for (var j = 0; j < cols - 1; j++) {
+                    var space = document.createElement("div");
+                    space.classList.add("spacing");
+                    space.style.height = spacing + "px";
+                    space.style.width = spacing + "px";
+                    space.style.position = "absolute";
+                    space.style.left = ((j * blockSize) + ((j + 1) * spacing)) + "px";
+                    space.style.top = ((i * blockSize) + ((i + 1) * spacing)) + "px";
+                    board.appendChild(space);
                 }
             }
         }
