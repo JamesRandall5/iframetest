@@ -5,14 +5,14 @@
     <div id="board" style="position: absolute;"></div>
 
     <style>
-        /* Add a common style for the spacing */
-        .spacing {
-            background-color: white;
-        }
-
         /* Style for the walls */
         .wall {
             background-color: yellow;
+        }
+        
+        /* Style for the spacing */
+        .spacing {
+            background-color: white;
         }
     </style>
 
@@ -56,7 +56,8 @@
 
         var captureBack = true;
 
-        board.style.backgroundColor = "black";
+        // Set the background color for the board to white
+        board.style.backgroundColor = "white";
         board.style.border = "1px solid white";
         board.style.height = ((rows * blockSize) + ((rows - 1) * spacing)) + "px"; // Adjust height
         board.style.width = ((cols * blockSize) + ((cols - 1) * spacing)) + "px"; // Adjust width
