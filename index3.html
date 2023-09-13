@@ -118,8 +118,10 @@
 
             player.style.left = (playerPos.x * blockSize) + "px";
             player.style.top = (playerPos.y * blockSize) + "px";
+        }
 
-            // Handle open square redirection
+        // Function to handle double-click events on open squares
+        function handleDoubleClick(event) {
             var currentSquareValue = maze[playerPos.y][playerPos.x];
             if (currentSquareValue === 0) {
                 // Redirect to the corresponding URL for the open square
@@ -127,12 +129,11 @@
                 if (squareIndex < squareUrls.length) {
                     window.location.href = squareUrls[squareIndex];
                 }
-            } else if (currentSquareValue === -1) {
-                console.log("U WIN");
-                captureBack = false;
-                player.style.backgroundColor = "yellow";
             }
         }
+
+        // Add a double-click event listener to the board
+        board.addEventListener("dblclick", handleDoubleClick);
 
         window.addEventListener("keydown", function(event) {
             switch (event.keyCode) {
@@ -147,6 +148,9 @@
                     break;
                 case 39:
                     move("right");
+                    break;
+                case 13: // Enter key
+                    handleDoubleClick(); // Call the same function as for double-click
                     break;
             }
         });
