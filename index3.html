@@ -46,8 +46,8 @@
 
         board.style.backgroundColor = "black";
         board.style.border = "1px solid white";
-        board.style.height = ((rows * blockSize) + (rows - 1) * spacing) + "px"; // Adjust height
-        board.style.width = ((cols * blockSize) + (cols - 1) * spacing) + "px"; // Adjust width
+        board.style.height = ((rows * blockSize) + ((rows - 1) * spacing)) + "px"; // Adjust height
+        board.style.width = ((cols * blockSize) + ((cols - 1) * spacing)) + "px"; // Adjust width
 
         function drawMaze() {
             var elements = document.getElementsByClassName("wall");
@@ -66,13 +66,13 @@
                         wall.style.width = blockSize + "px";
                         wall.style.backgroundColor = col === 1 ? "red" : "green";
                         wall.style.position = "absolute";
-                        wall.style.left = (colN * blockSize + colN * spacing) + "px"; // Adjust left position
-                        wall.style.top = (rowN * blockSize + rowN * spacing) + "px"; // Adjust top position
+                        wall.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
+                        wall.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
                         walls.push(wall);
                         board.appendChild(wall);
                     } else if (col === 2) {
-                        player.style.left = (colN * blockSize + colN * spacing) + "px"; // Adjust left position
-                        player.style.top = (rowN * blockSize + rowN * spacing) + "px"; // Adjust top position
+                        player.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
+                        player.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
                     }
                 }
             }
