@@ -6,8 +6,13 @@
 
     <style>
         /* Style for the walls and spacing */
-        .wall, .spacing {
+        .wall {
             background-color: yellow;
+            position: absolute;
+        }
+        .spacing {
+            background-color: white;
+            position: absolute;
         }
     </style>
 
@@ -70,7 +75,7 @@
                         wall.classList.add("wall");
                         wall.style.height = blockSize + "px";
                         wall.style.width = blockSize + "px";
-                        wall.style.position = "absolute";
+                        wall.style.backgroundColor = col === 1 ? "red" : "green";
                         wall.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
                         wall.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
                         walls.push(wall);
@@ -79,20 +84,6 @@
                         player.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
                         player.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
                     }
-                }
-            }
-
-            // Add the spacing elements
-            for (var i = 0; i < rows - 1; i++) {
-                for (var j = 0; j < cols - 1; j++) {
-                    var space = document.createElement("div");
-                    space.classList.add("spacing");
-                    space.style.height = spacing + "px";
-                    space.style.width = spacing + "px";
-                    space.style.position = "absolute";
-                    space.style.left = ((j * blockSize) + ((j + 1) * spacing)) + "px";
-                    space.style.top = ((i * blockSize) + ((i + 1) * spacing)) + "px";
-                    board.appendChild(space);
                 }
             }
         }
@@ -131,8 +122,8 @@
                     break;
             }
 
-            player.style.left = (playerPos.x * blockSize) + "px";
-            player.style.top = (playerPos.y * blockSize) + "px";
+            player.style.left = ((playerPos.x * blockSize) + (playerPos.x * spacing)) + "px"; // Adjust left position
+            player.style.top = ((playerPos.y * blockSize) + (playerPos.y * spacing)) + "px"; // Adjust top position
         }
 
         // Function to handle double-click events on open squares
