@@ -10,7 +10,7 @@
 /** Keep this on OLD JS-style for Orsay compatibility */
 
 <script type="text/javascript">
-    var blockSize = 50;
+    var blockSize = 100;
     var board = document.getElementById("board");
     //The game board 1 = walls, 0 = free space, and -1 = the goal
     var maze = [
@@ -107,25 +107,6 @@
                     return;
                 }
                 break;
-        }
-
-        if(maze[playerPos.y][playerPos.x] === -1) {
-            console.log("U WIN");
-            captureBack = false;
-            player.style.backgroundColor = "yellow";
-            maze = [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
-                [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-                [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ];
-            drawMaze();
         }
 
         player.style.left = (playerPos.x * blockSize) + "px";
