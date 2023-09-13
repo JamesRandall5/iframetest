@@ -6,6 +6,7 @@
 
     <script type="text/javascript">
         var blockSize = 100;
+        var spacing = 10; // Adjust the spacing value as needed
         var board = document.getElementById("board");
         var maze = [
             [0, 0, 0, 0],
@@ -35,52 +36,31 @@
 
         var captureBack = true;
 
-        board.style.backgroundColor = "black";
         board.style.border = "1px solid white";
-        board.style.height = (rows * blockSize) + "px"
-        board.style.width = (cols * blockSize) + "px"
+        board.style.height = ((rows * blockSize) + ((rows - 1) * spacing)) + "px"; // Adjust height
+        board.style.width = ((cols * blockSize) + ((cols - 1) * spacing)) + "px"; // Adjust width
 
         function drawMaze() {
-            var elements = document.getElementsByClassName("wall");
-            while (elements.length > 0) {
-                elements[0].parentNode.removeChild(elements[0]);
-            }
             for (var rowN in maze) {
                 var row = maze[rowN]
 
                 for (var colN in row) {
                     var col = row[colN];
-                    if (col === 1 || col === -1) {
-                        var wall = document.createElement("div");
-                        wall.classList.add("wall");
-                        wall.style.height = blockSize + "px";
-                        wall.style.width = blockSize + "px";
-                        wall.style.backgroundColor = col === 1 ? "red" : "green";
-                        wall.style.position = "absolute";
-                        wall.style.left = colN * blockSize + "px";
-                        wall.style.top = rowN * blockSize + "px";
-                        walls.push(wall);
-                        board.appendChild(wall);
-                    } else if (col === 2) {
-                        player.style.left = colN * blockSize + "px";
-                        player.style.top = rowN * blockSize + "px";
-                    } else if (col === 0) {
-                        var squareIndex = colN + rowN * cols;
-                        if (squareIndex < squareInfo.length) {
-                            // Create a square with custom text
-                            var square = document.createElement("div");
-                            square.style.height = blockSize + "px";
-                            square.style.width = blockSize + "px";
-                            square.style.backgroundColor = "yellow";
-                            square.style.position = "absolute";
-                            square.style.left = colN * blockSize + "px";
-                            square.style.top = rowN * blockSize + "px";
-                            square.innerHTML = squareInfo[squareIndex][1]; // Custom text
-                            square.style.textAlign = "center";
-                            square.style.lineHeight = blockSize + "px";
-                            square.style.zIndex = 1; // Behind the player
-                            board.appendChild(square);
-                        }
+                    var square = document.createElement("div");
+                    square.style.height = blockSize + "px";
+                    square.style.width = blockSize + "px";
+                    square.style.backgroundColor = col === 1 ? "red" : "yellow";
+                    square.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
+                    square.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
+                    square.style.position = "absolute";
+                    square.innerHTML = squareInfo[(colN + rowN * cols)][1]; // Custom text
+                    square.style.textAlign = "center";
+                    square.style.lineHeight = blockSize + "px";
+                    square.style.zIndex = 1; // Behind the player
+                    board.appendChild(square);
+                    if (col === 2) {
+                        player.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
+                        player.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
                     }
                 }
             }
@@ -120,14 +100,15 @@
                     break;
             }
 
-            player.style.left = (playerPos.x * blockSize) + "px";
-            player.style.top = (playerPos.y * blockSize) + "px";
+            player.style.left = ((playerPos.x * blockSize) + (playerPos.x * spacing)) + "px"; // Adjust left position
+            player.style.top = ((playerPos.y * blockSize) + (playerPos.y * spacing)) + "px"; // Adjust top position
         }
 
         // Function to handle double-click events on open squares
         function handleDoubleClick(event) {
             var currentSquareValue = maze[playerPos.y][playerPos.x];
             if (currentSquareValue === 0) {
+                // Redirect to the corresponding URL for the open square
                 var squareIndex = playerPos.x + playerPos.y * cols;
                 if (squareIndex < squareInfo.length) {
                     window.location.href = squareInfo[squareIndex][0]; // Redirect to URL
