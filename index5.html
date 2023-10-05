@@ -14,22 +14,6 @@
             [0, 0, 0, 0]
         ];
 
-        // URLs for open spaces (corresponding to maze elements with value 0)
-        var squareUrls = [
-            'https://www.bbc.co.uk',
-            'url2.html',
-            'url3.html',
-            'url4.html',
-            'url5.html',
-            'url6.html',
-            'url7.html',
-            'url8.html',
-            'url9.html',
-            'url10.html',
-            'url11.html',
-            'url12.html',
-        ];
-
         var rows = maze.length;
         var cols = maze[0].length;
         var walls = [];
@@ -41,8 +25,6 @@
         player.style.zIndex = 100;
         board.appendChild(player);
         var playerPos = { x: 0, y: 0 };
-
-        var captureBack = true;
 
         board.style.border = "1px solid white";
         board.style.height = ((rows * blockSize) + ((rows - 1) * spacing)) + "px"; // Adjust height
@@ -108,21 +90,7 @@
             player.style.top = ((playerPos.y * blockSize) + (playerPos.y * spacing)) + "px"; // Adjust top position
         }
 
-        // Function to handle double-click events on open squares
-        function handleDoubleClick(event) {
-            var currentSquareValue = maze[playerPos.y][playerPos.x];
-            if (currentSquareValue === 0) {
-                // Redirect to the corresponding URL for the open square
-                var squareIndex = playerPos.x + playerPos.y * cols;
-                if (squareIndex < squareUrls.length) {
-                    window.location.href = squareUrls[squareIndex];
-                }
-            }
-        }
-
-        // Add a double-click event listener to the board
-        board.addEventListener("dblclick", handleDoubleClick);
-
+        // Forward "Enter" and "Select" keys (key code 13) to the same iframe
         window.addEventListener("keydown", function(event) {
             switch (event.keyCode) {
                 case 38:
@@ -137,42 +105,16 @@
                 case 39:
                     move("right");
                     break;
-                case 'select': // enter key on virtual remote. 
-                    handleDoubleClick(); // Call the same function as for double-click
+                case 13: // Enter key
+                    // Forward the "Enter" key event to the same iframe
+                    window.parent.postMessage('enter', '*');
+                    break;
+                case 32: // Spacebar (Select key)
+                    // Forward the "Select" key event to the same iframe
+                    window.parent.postMessage('select', '*');
                     break;
             }
         });
-
-        window.addEventListener('message', function (event) {
-            console.log('message received:  ' + event.data);
-            try {
-                var msg = JSON.parse(event.data);
-                if (msg.type === 'dashboard-iframe-msg' && msg.source === 'dashboard-app') {
-                    switch (msg.data.key) {
-                        case "down":
-                        case "up":
-                        case "left":
-                        case "right":
-                            move(msg.data.key);
-                            break;
-                        case "back": {
-                            if (!captureBack) {
-                                return;
-                            }
-                            console.log('consuming back');
-                            parent.postMessage(JSON.stringify({
-                                type: "dashboard-iframe-msg", source: "myapp",
-                                data: {
-                                    type: "keypress-consumed",
-                                    seq: msg.data.seq,
-                                }
-                            }), '*');
-                        }
-                            break;
-                    }
-                }
-            } catch (e) { }
-        }, false);
     </script>
 </body>
 </html>
