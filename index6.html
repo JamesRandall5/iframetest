@@ -116,8 +116,8 @@
 
         // Function to handle double-click events on open squares
         function handleDoubleClick(event) {
-        //    var currentSquareValue = maze[playerPos.y][playerPos.x];
-         //   if (currentSquareValue === 0 | event.keyCode == 13) {
+          var currentSquareValue = maze[playerPos.y][playerPos.x];
+            if (currentSquareValue === 0 | event.keyCode == 13) {
                 // Redirect to the corresponding URL for the open square
                 var squareIndex = playerPos.x + playerPos.y * cols;
                 if (squareIndex < squareUrls.length) {
