@@ -120,6 +120,13 @@
                 }
             }
         }
+        window.addEventListener("keydown", function(event) {
+            function openlink(event) {
+                if (13 === event.keyCode) {
+                    handleDoubleClick();                    
+                }      
+            }
+        }    
 
         // Add a click event listener to the board
         board.addEventListener("click", handleDoubleClick);
