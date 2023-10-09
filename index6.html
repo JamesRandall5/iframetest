@@ -127,14 +127,15 @@
            }
         }
         
-        //window.addEventListener("keydown", function(event) {
-          //  if (event.keyCode === 13) {
-                //handleDoubleClick();
-        //    }
-      //  });  
+        window.addEventListener("keydown", function(event) {
+            if (event.key.toLowerCase() === "select") {
+                handleDoubleClick();
+            }
+        });
+
 
         // Add a click event listener to the board
-        board.addEventListener("click", handleDoubleClick);
+     //   board.addEventListener("click", handleDoubleClick);
 
         window.addEventListener("keydown", function(event) {
             switch (event.keyCode) {
