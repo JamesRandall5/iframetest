@@ -100,11 +100,11 @@
                         playerPos.y++;
                     } else {
                         return;
-                case "select":
-                    if (dir.keyCode == 'select'|13) {
-                        handleDoubleClick();                        
-                    } else {
-                        return;
+                //case "select":
+               //     if (dir.keyCode == 'select'|13) {
+                 //       handleDoubleClick();                        
+                //    } else {
+                  //      return;
                         
                     }
                     break;
@@ -116,7 +116,7 @@
 
         // Function to handle double-click events on open squares
         function handleDoubleClick(event) {
-          //  var currentSquareValue = maze[playerPos.y][playerPos.x];
+        //    var currentSquareValue = maze[playerPos.y][playerPos.x];
          //   if (currentSquareValue === 0 | event.keyCode == 13) {
                 // Redirect to the corresponding URL for the open square
                 var squareIndex = playerPos.x + playerPos.y * cols;
@@ -124,7 +124,7 @@
                     window.location.href = squareUrls[squareIndex];
                     console.log('redirect success');
                 }
-          //  }
+           }
         }
         
         //window.addEventListener("keydown", function(event) {
