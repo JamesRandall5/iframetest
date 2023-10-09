@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+    <div id="board" style="position: absolute;"></div>
+
+    <script type="text/javascript">
+        var blockSize = 100;
+        var spacing = 10; // Adjust the spacing value as needed
+        var board = document.getElementById("board");
+        var maze = [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ];
+
+        // URLs for open spaces (corresponding to maze elements with value 0)
+        var squareUrls = [
+            'https://www.bbc.co.uk',
+            'url2.html',
+            'url3.html',
+            'url4.html',
+            'url5.html',
+            'url6.html',
+            'url7.html',
+            'url8.html',
+            'url9.html',
+            'url10.html',
+            'url11.html',
+            'url12.html',
+        ];
+
+        var rows = maze.length;
+        var cols = maze[0].length;
+        var walls = [];
+        var player = document.createElement("div");
+        player.style.height = blockSize + "px";
+        player.style.width = blockSize + "px";
+        player.style.backgroundColor = "blue";
+        player.style.position = "absolute";
+        player.style.zIndex = 100;
+        board.appendChild(player);
+        var playerPos = { x: 0, y: 0 };
+
+        var captureBack = true;
+
+        board.style.border = "1px solid white";
+        board.style.height = ((rows * blockSize) + ((rows - 1) * spacing)) + "px"; // Adjust height
+        board.style.width = ((cols * blockSize) + ((cols - 1) * spacing)) + "px"; // Adjust width
+
+        function drawMaze() {
+            for (var rowN in maze) {
+                var row = maze[rowN]
+
+                for (var colN in row) {
+                    var col = row[colN];
+                    var square = document.createElement("div");
+                    square.style.height = blockSize + "px";
+                    square.style.width = blockSize + "px";
+                    square.style.backgroundColor = col === 1 ? "red" : "yellow";
+                    square.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
+                    square.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
+                    square.style.position = "absolute";
+                    board.appendChild(square);
+                    if (col === 2) {
+                        player.style.left = ((colN * blockSize) + (colN * spacing)) + "px"; // Adjust left position
+                        player.style.top = ((rowN * blockSize) + (rowN * spacing)) + "px"; // Adjust top position
+                    }
+                }
+            }
+        }
+
+        drawMaze();
+
+        function move(dir) {
+            switch (dir) {
+                case "right":
+                    if (playerPos.x < cols - 1 && maze[playerPos.y][playerPos.x + 1] !== 1) {
+                        playerPos.x++;
+                    } else {
+                        return;
+                    }
+                    break;
+                case "left":
+                    if (playerPos.x > 0 && maze[playerPos.y][playerPos.x - 1] !== 1) {
+                        playerPos.x--;
+                    } else {
+                        return;
+                    }
+                    break;
+                case "up":
+                    if (playerPos.y > 0 && maze[playerPos.y - 1][playerPos.x] !== 1) {
+                        playerPos.y--;
+                    } else {
+                        return;
+                    }
+                    break;
+                case "down":
+                    if (playerPos.y < rows - 1 && maze[playerPos.y + 1][playerPos.x] !== 1) {
+                        playerPos.y++;
+                    } else {
+                        return;
+                    }
+                    break;
+            }
+
+            player.style.left = ((playerPos.x * blockSize) + (playerPos.x * spacing)) + "px"; // Adjust left position
+            player.style.top = ((playerPos.y * blockSize) + (playerPos.y * spacing)) + "px"; // Adjust top position
+        }
+
+        // Function to handle double-click events on open squares
+        function handleDoubleClick(event) {
+            var currentSquareValue = maze[playerPos.y][playerPos.x];
+            if (currentSquareValue === 0) {
+                // Redirect to the corresponding URL for the open square
+                var squareIndex = playerPos.x + playerPos.y * cols;
+                if (squareIndex < squareUrls.length) {
+                    window.location.href = squareUrls[squareIndex];
+                    console.log('redirect success');
+                }
+            }
+        }
+
+        // Add a click event listener to the board
+        board.addEventListener("click", handleDoubleClick);
+
+        window.addEventListener("keydown", function(event) {
+            switch (event.keyCode) {
+                case 38:
+                    move("up");
+                    console.log('send up');
+                    break;
+                case 40:
+                    move("down");
+                    console.log('send down');
+                    break;
+                case 37:
+                    move("left");
+                    console.log('send left');
+                    break;
+                case 39:
+                    move("right");
+                    console.log('send right');
+                    break;
+                case 13: // Enter key
+                    handleDoubleClick(); // Call the same function as for double-click
+                    console.log('assigned key correct for ok/enter: send enter');
+                    break;
+            }
+        });
+
+        window.addEventListener('message', function (event) {
+            console.log('message received:  ' + event.data);
+            try {
+                var msg = JSON.parse(event.data);
+                if (msg.type === 'dashboard-iframe-msg' && msg.source === 'dashboard-app') {
+                    switch (msg.data.key) {
+                        case "down":
+                        case "up":
+                        case "left":
+                        case "right":
+                            move(msg.data.key);
+                            break;
+                        case "back": {
+                            if (!captureBack) {
+                                return;
+                            }
+                            console.log('consuming back');
+                            parent.postMessage(JSON.stringify({
+                                type: "dashboard-iframe-msg", source: "myapp",
+                                data: {
+                                    type: "keypress-consumed",
+                                    seq: msg.data.seq,
+                                }
+                            }), '*');
+                        }
+                            break;
+                    }
+                }
+            } catch (e) { }
+        }, false);
+    </script>
+</body>
+</html>
